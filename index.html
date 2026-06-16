@@ -1013,17 +1013,110 @@
 
       .experience {
         display: grid;
-        grid-template-columns: 0.85fr 1.15fr;
-        gap: clamp(24px, 5vw, 72px);
+        grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
+        gap: clamp(24px, 4vw, 58px);
         align-items: stretch;
       }
 
       .poster-panel {
-        min-height: 620px;
-        background:
-          linear-gradient(180deg, rgba(20, 0, 10, 0.1), rgba(20, 0, 10, 0.68)),
-          url("./fortica.webp") center / cover no-repeat;
+        position: relative;
+        overflow: hidden;
+        align-self: start;
+        aspect-ratio: 4 / 5;
+        background: rgba(8, 0, 26, 0.7);
         border: 1px solid color-mix(in oklch, var(--fg), transparent 72%);
+      }
+
+      .poster-panel video {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        filter: saturate(1.08) contrast(1.08) brightness(0.84);
+      }
+
+      .poster-panel::before,
+      .poster-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .poster-panel::before {
+        z-index: 1;
+        background:
+          radial-gradient(
+            circle at 24% 18%,
+            color-mix(in oklch, var(--gold), transparent 76%),
+            transparent 28%
+          ),
+          linear-gradient(180deg, transparent 42%, rgba(7, 0, 24, 0.68));
+        mix-blend-mode: screen;
+      }
+
+      .poster-panel::after {
+        z-index: 2;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        box-shadow:
+          inset 0 0 0 1px rgba(6, 218, 255, 0.08),
+          inset 0 -80px 140px rgba(5, 0, 22, 0.62);
+      }
+
+      .video-sound-toggle {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        z-index: 4;
+        width: 48px;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border: 1px solid color-mix(in oklch, var(--cyan), transparent 20%);
+        border-radius: 999px;
+        color: var(--fg);
+        background:
+          radial-gradient(
+            circle at 40% 20%,
+            color-mix(in oklch, var(--cyan), transparent 62%),
+            transparent 54%
+          ),
+          rgba(8, 0, 26, 0.82);
+        box-shadow:
+          0 18px 40px rgba(0, 0, 0, 0.38),
+          inset 0 0 22px rgba(9, 216, 255, 0.1);
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .video-sound-toggle:hover {
+        transform: translateY(-2px) scale(1.03);
+        border-color: var(--cyan);
+      }
+
+      .video-sound-toggle svg {
+        width: 23px;
+        height: 23px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .video-sound-toggle [data-sound-on] {
+        display: none;
+      }
+
+      .video-sound-toggle.is-unmuted [data-sound-off] {
+        display: none;
+      }
+
+      .video-sound-toggle.is-unmuted [data-sound-on] {
+        display: block;
       }
 
       .copy-stack {
@@ -1770,7 +1863,7 @@
           border-top: 1px solid color-mix(in oklch, var(--fg), transparent 70%);
         }
         .poster-panel {
-          min-height: 520px;
+          width: min(100%, 620px);
         }
         .sponsor-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2044,8 +2137,8 @@
                 <div class="phase">
                   <b>Early bird</b>
                   <span
-                    >One day ticket 33 KM / festival ticket 60 KM until 20.05.
-                    or sold out.</span
+                    >One day ticket 33 KM / festival ticket 60 KM until sold
+                    out.</span
                   >
                 </div>
               </div>
@@ -2111,7 +2204,7 @@
             <aside class="price-card">
               <div class="price-lockup">
                 <div>
-                  <span>Early bird until 20.05.</span>
+                  <span>Until sold out.</span>
                   <strong>From 33 KM</strong>
                 </div>
               </div>
@@ -2138,7 +2231,36 @@
 
         <section class="section" data-section="experience">
           <div class="section-inner experience">
-            <div class="poster-panel" aria-label="Festival poster visual"></div>
+            <div class="poster-panel" aria-label="Festival video">
+              <video
+                data-fortica-video
+                src="./Herz_Fest26_Intro_1.mp4"
+                poster="./fortica.webp"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+              ></video>
+              <button
+                class="video-sound-toggle"
+                type="button"
+                data-video-sound-toggle
+                aria-label="Turn video sound on"
+                aria-pressed="false"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" data-sound-off>
+                  <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                  <path d="m18 9 4 4" />
+                  <path d="m22 9-4 4" />
+                </svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true" data-sound-on>
+                  <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                  <path d="M17 9.5c.8.7 1.2 1.5 1.2 2.5s-.4 1.8-1.2 2.5" />
+                  <path d="M19.6 7c1.5 1.4 2.4 3.1 2.4 5s-.9 3.6-2.4 5" />
+                </svg>
+              </button>
+            </div>
             <div class="copy-stack">
               <article class="copy-block">
                 <p class="eyebrow">The feeling has a home</p>
@@ -2628,6 +2750,40 @@
           days === 1
             ? "day until the feeling comes home."
             : "days until the feeling comes home.";
+      })();
+
+      (() => {
+        const video = document.querySelector("[data-fortica-video]");
+        const toggle = document.querySelector("[data-video-sound-toggle]");
+        if (!video || !toggle) return;
+
+        const syncToggle = () => {
+          const soundOn = !video.muted && video.volume > 0;
+          toggle.classList.toggle("is-unmuted", soundOn);
+          toggle.setAttribute("aria-pressed", String(soundOn));
+          toggle.setAttribute(
+            "aria-label",
+            soundOn ? "Turn video sound off" : "Turn video sound on"
+          );
+        };
+
+        const playVideo = () => {
+          const playRequest = video.play();
+          if (playRequest) {
+            playRequest.catch(() => {});
+          }
+        };
+
+        toggle.addEventListener("click", () => {
+          video.muted = !video.muted;
+          video.volume = video.muted ? 0 : 1;
+          playVideo();
+          syncToggle();
+        });
+
+        video.addEventListener("volumechange", syncToggle);
+        playVideo();
+        syncToggle();
       })();
 
       (() => {

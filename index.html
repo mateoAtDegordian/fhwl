@@ -71,6 +71,11 @@
         --cyan: oklch(72% 0.155 226);
         --violet: oklch(54% 0.22 287);
         --gold: oklch(76% 0.17 72);
+        --page-bg: oklch(12% 0.078 292);
+        --page-bg-deep: oklch(8.6% 0.064 289);
+        --page-bg-lift: oklch(15.4% 0.092 292);
+        --section-glow: rgba(18, 0, 44, 0.56);
+        --panel-bg: rgba(10, 0, 32, 0.68);
         --font-display:
           "Syne ExtraBold", "Syne", "Belfast Grotesk", system-ui, sans-serif;
         --font-body:
@@ -91,7 +96,7 @@
       html {
         color-scheme: dark;
         scroll-behavior: smooth;
-        background: var(--bg);
+        background: var(--page-bg);
       }
 
       body {
@@ -101,25 +106,15 @@
         font-family: var(--font-body);
         background:
           radial-gradient(
-            circle at 12% 12%,
-            color-mix(in oklch, var(--cyan), transparent 68%),
-            transparent 30vw
-          ),
-          radial-gradient(
-            circle at 82% 8%,
-            color-mix(in oklch, var(--violet), transparent 58%),
-            transparent 34vw
-          ),
-          radial-gradient(
-            circle at 70% 64%,
-            color-mix(in oklch, var(--magenta), transparent 72%),
-            transparent 32vw
+            ellipse at 52% 46%,
+            color-mix(in oklch, var(--page-bg-lift), transparent 58%),
+            transparent 38vw
           ),
           linear-gradient(
             180deg,
-            color-mix(in oklch, var(--bg), black 2%),
-            var(--bg) 54%,
-            color-mix(in oklch, var(--surface), black 10%)
+            var(--page-bg) 0%,
+            var(--page-bg-deep) 48%,
+            var(--page-bg) 100%
           );
         overflow-x: hidden;
       }
@@ -129,19 +124,27 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        opacity: 0.16;
+        opacity: 0.2;
         background-image:
           linear-gradient(
             90deg,
-            rgba(255, 255, 255, 0.06) 1px,
+            rgba(255, 255, 255, 0.065) 1px,
             transparent 1px
           ),
           linear-gradient(
             180deg,
-            rgba(255, 255, 255, 0.04) 1px,
+            rgba(255, 255, 255, 0.035) 1px,
             transparent 1px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 0 1px,
+            transparent 1px 12px
           );
-        background-size: 44px 44px;
+        background-size:
+          78px 100%,
+          100% 52px,
+          12px 100%;
         mix-blend-mode: screen;
         z-index: 5;
       }
@@ -173,6 +176,217 @@
       .site-shell {
         position: relative;
         isolation: isolate;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            ellipse at 50% 14%,
+            var(--section-glow),
+            transparent 42vw
+          ),
+          radial-gradient(
+            ellipse at 50% 48%,
+            var(--section-glow),
+            transparent 46vw
+          ),
+          radial-gradient(
+            ellipse at 50% 76%,
+            var(--section-glow),
+            transparent 44vw
+          ),
+          linear-gradient(
+            90deg,
+            rgba(4, 0, 18, 0.42) 0 6.5%,
+            transparent 6.5% 91.5%,
+            rgba(4, 0, 18, 0.38) 91.5% 100%
+          ),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.034) 0 1px,
+            transparent 1px 18px
+          ),
+          repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.022) 0 1px,
+            transparent 1px 9px
+          ),
+          linear-gradient(
+            180deg,
+            var(--page-bg) 0%,
+            color-mix(in oklch, var(--page-bg), var(--page-bg-deep) 32%) 30%,
+            var(--page-bg-deep) 56%,
+            var(--page-bg) 100%
+          );
+      }
+
+      .site-shell::before,
+      .site-shell::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .site-shell::before {
+        opacity: 0.42;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.08),
+            transparent 1px
+          )
+          7.2% 0 / 1px 100% no-repeat,
+          linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.04) 50%,
+            transparent
+          )
+          0 0 / 100% 310px repeat-y;
+        mix-blend-mode: screen;
+      }
+
+      .site-shell::after {
+        opacity: 0.34;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.34),
+            transparent 9%,
+            transparent 89%,
+            rgba(0, 0, 0, 0.28)
+          ),
+          linear-gradient(
+            180deg,
+            rgba(8, 0, 30, 0.18),
+            transparent 18%,
+            rgba(6, 0, 24, 0.22) 55%,
+            transparent 86%
+          );
+      }
+
+      main,
+      .footer {
+        position: relative;
+        z-index: 1;
+      }
+
+      .page-sun {
+        position: absolute;
+        width: clamp(280px, 38vw, 690px);
+        aspect-ratio: 1;
+        background: url("./sunce.svg") center / contain no-repeat;
+        opacity: 0.24;
+        filter: brightness(1.75) contrast(1.06);
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 0;
+        animation:
+          sun-spin 72s linear infinite,
+          page-sun-glow 9s ease-in-out infinite;
+      }
+
+      .page-sun--hero {
+        top: 4.5%;
+        left: 0;
+        width: clamp(250px, 34vw, 620px);
+        translate: -48% -50%;
+        opacity: 0.24;
+      }
+
+      .page-sun--hero-right {
+        top: 10%;
+        right: 0;
+        width: clamp(220px, 28vw, 520px);
+        translate: 48% -50%;
+        opacity: 0.18;
+        animation-delay: -4.5s;
+        animation-direction: reverse;
+      }
+
+      .page-sun--lineup-left {
+        top: 19%;
+        left: 0;
+        width: clamp(230px, 30vw, 560px);
+        translate: -50% -50%;
+        opacity: 0.19;
+        animation-delay: -2s;
+      }
+
+      .page-sun--lineup {
+        top: 28%;
+        right: 0;
+        width: clamp(230px, 29vw, 520px);
+        translate: 48% -50%;
+        opacity: 0.22;
+        animation-delay: -1.4s;
+        animation-direction: reverse;
+      }
+
+      .page-sun--tickets {
+        top: 39%;
+        left: 0;
+        width: clamp(260px, 34vw, 620px);
+        translate: -50% -50%;
+        opacity: 0.2;
+        animation-delay: -6s;
+      }
+
+      .page-sun--route {
+        top: 47%;
+        right: 0;
+        width: clamp(250px, 32vw, 580px);
+        translate: 50% -50%;
+        opacity: 0.24;
+        animation-delay: -2.8s;
+        animation-direction: reverse;
+      }
+
+      .page-sun--fortica-left {
+        top: 60%;
+        left: 0;
+        width: clamp(310px, 40vw, 720px);
+        translate: -49% -50%;
+        opacity: 0.28;
+        animation-delay: -8s;
+      }
+
+      .page-sun--gallery-left {
+        top: 79%;
+        left: 0;
+        width: clamp(330px, 44vw, 760px);
+        translate: -48% -50%;
+        opacity: 0.3;
+        animation-delay: -5.2s;
+      }
+
+      .page-sun--gallery-right {
+        top: 74%;
+        right: 0;
+        width: clamp(240px, 30vw, 560px);
+        translate: 48% -50%;
+        opacity: 0.21;
+        animation-delay: -3.8s;
+        animation-direction: reverse;
+      }
+
+      .page-sun--partners {
+        top: 83.5%;
+        right: 0;
+        width: clamp(340px, 43vw, 780px);
+        translate: 42% -50%;
+        opacity: 0.31;
+        animation-delay: -7s;
+        animation-direction: reverse;
+      }
+
+      .page-sun--footer {
+        top: 96%;
+        left: 0;
+        width: clamp(230px, 30vw, 560px);
+        translate: -52% -50%;
+        opacity: 0.18;
+        animation-delay: -6.4s;
       }
 
       .grain {
@@ -820,7 +1034,13 @@
       .copy-block {
         padding: clamp(20px, 3vw, 34px);
         border: 1px solid color-mix(in oklch, var(--fg), transparent 76%);
-        background: color-mix(in oklch, var(--surface), transparent 16%);
+        background:
+          radial-gradient(
+            ellipse at 18% 0%,
+            color-mix(in oklch, var(--cyan), transparent 90%),
+            transparent 38%
+          ),
+          var(--panel-bg);
       }
 
       .copy-block h3 {
@@ -858,7 +1078,7 @@
             color-mix(in oklch, var(--violet), transparent 84%),
             transparent 54%
           ),
-          color-mix(in oklch, var(--bg), transparent 18%);
+          color-mix(in oklch, var(--page-bg), transparent 10%);
       }
 
       .micro-card b {
@@ -889,15 +1109,18 @@
         background:
           linear-gradient(
             135deg,
-            color-mix(in oklch, var(--cyan), transparent 76%),
+            color-mix(in oklch, var(--cyan), transparent 84%),
             transparent 36%
           ),
           linear-gradient(
             210deg,
-            color-mix(in oklch, var(--violet), transparent 78%),
+            color-mix(in oklch, var(--violet), transparent 82%),
             transparent 42%
           ),
-          color-mix(in oklch, var(--surface), black 8%);
+          var(--panel-bg);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          0 38px 90px rgba(6, 0, 24, 0.32);
         padding: clamp(24px, 4vw, 46px);
       }
 
@@ -959,7 +1182,13 @@
         margin: 22px 0;
         padding: 18px;
         border: 1px solid color-mix(in oklch, var(--cyan), transparent 24%);
-        background: color-mix(in oklch, var(--cyan), transparent 86%);
+        background:
+          linear-gradient(
+            90deg,
+            color-mix(in oklch, var(--cyan), transparent 86%),
+            transparent 72%
+          ),
+          rgba(10, 0, 32, 0.58);
       }
 
       .bus-card b {
@@ -982,7 +1211,7 @@
         position: relative;
         overflow: hidden;
         border: 1px solid color-mix(in oklch, var(--fg), transparent 72%);
-        background: color-mix(in oklch, var(--surface), black 5%);
+        background: var(--panel-bg);
       }
 
       .map-card iframe {
@@ -1012,6 +1241,320 @@
         text-transform: uppercase;
         line-height: 1;
         margin-bottom: 8px;
+      }
+
+      .gallery-section {
+        z-index: 2;
+        overflow: visible;
+        padding-block: clamp(58px, 7vw, 96px);
+        border-top: 0;
+        background:
+          radial-gradient(
+            ellipse at 50% 40%,
+            var(--section-glow),
+            transparent 44vw
+          ),
+          linear-gradient(
+            90deg,
+            rgba(5, 0, 22, 0.26),
+            rgba(10, 0, 32, 0.48) 18%,
+            rgba(10, 0, 32, 0.46) 82%,
+            rgba(5, 0, 22, 0.24)
+          );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.035),
+          0 -76px 150px rgba(8, 0, 28, 0.28),
+          0 58px 130px rgba(8, 0, 28, 0.34);
+      }
+
+      .gallery-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .gallery-title {
+        margin-bottom: clamp(26px, 3.8vw, 54px);
+      }
+
+      .gallery-title h2 {
+        font-size: clamp(38px, 5vw, 78px);
+        line-height: 0.92;
+      }
+
+      .gallery-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-auto-rows: clamp(142px, 12vw, 218px);
+        gap: clamp(6px, 0.75vw, 10px);
+        padding: clamp(18px, 2.6vw, 36px) 0;
+      }
+
+      .gallery-tile {
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        display: block;
+        padding: 0;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid color-mix(in oklch, var(--fg), transparent 80%);
+        border-radius: 0;
+        background: color-mix(in oklch, var(--surface), transparent 22%);
+        box-shadow: 0 0 0 1px rgba(9, 0, 25, 0.55);
+        animation: gallery-float 8s ease-in-out infinite;
+        transition:
+          box-shadow 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .gallery-tile:nth-child(2n) {
+        animation-delay: -2.4s;
+      }
+
+      .gallery-tile:nth-child(3n) {
+        animation-delay: -4.8s;
+      }
+
+      .gallery-tile img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        opacity: 1;
+        transform: scale(1.04);
+        filter: saturate(1.04) contrast(1.04);
+        transition:
+          opacity 1.85s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 2s cubic-bezier(0.16, 1, 0.3, 1),
+          filter 1.65s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform, filter;
+      }
+
+      .gallery-tile .gallery-image-current {
+        z-index: 0;
+      }
+
+      .gallery-tile .gallery-image-next {
+        z-index: 1;
+        opacity: 0;
+        transform: scale(1.14) rotate(0.25deg);
+        filter: saturate(1.28) contrast(1.1) blur(12px);
+      }
+
+      .gallery-tile::before,
+      .gallery-tile::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .gallery-tile::before {
+        z-index: 3;
+        background:
+          radial-gradient(
+            circle at 25% 25%,
+            rgba(255, 255, 255, 0.32),
+            transparent 16%
+          ),
+          linear-gradient(
+            115deg,
+            transparent 0 28%,
+            rgba(255, 255, 255, 0.2) 46%,
+            transparent 64% 100%
+          );
+        opacity: 0;
+        mix-blend-mode: screen;
+      }
+
+      .gallery-tile::after {
+        z-index: 2;
+        background:
+          linear-gradient(135deg, rgba(14, 214, 232, 0.18), transparent 44%),
+          linear-gradient(0deg, rgba(8, 0, 24, 0.36), transparent 58%);
+        opacity: 0.72;
+        transition: opacity 0.2s ease;
+      }
+
+      .gallery-tile:not(:hover):not(:focus-visible) .gallery-image-current {
+        animation: image-breathe 11s ease-in-out infinite alternate;
+      }
+
+      .gallery-grid:hover .gallery-tile img,
+      .gallery-grid:focus-within .gallery-tile img,
+      body.lightbox-open .gallery-tile img {
+        animation-play-state: paused;
+      }
+
+      .gallery-tile.is-crossfading .gallery-image-current {
+        animation: none;
+        opacity: 0;
+        transform: scale(1.09) translate3d(-1.1%, -0.9%, 0);
+        filter: saturate(0.92) contrast(1.02) blur(8px);
+      }
+
+      .gallery-tile.is-crossfading .gallery-image-next {
+        animation: none;
+        opacity: 1;
+        transform: scale(1.04) rotate(0deg);
+        filter: saturate(1.08) contrast(1.06) blur(0);
+      }
+
+      .gallery-tile.is-dissolving::before {
+        animation: image-dissolve-sheen 1.85s cubic-bezier(0.16, 1, 0.3, 1)
+          both;
+      }
+
+      .gallery-tile:hover,
+      .gallery-tile:focus-visible {
+        transform: translateY(-4px);
+        border-color: color-mix(in oklch, var(--cyan), transparent 16%);
+        box-shadow: 0 0 28px color-mix(in oklch, var(--cyan), transparent 62%);
+        outline: 0;
+      }
+
+      .gallery-tile:hover img,
+      .gallery-tile:focus-visible img {
+        transform: scale(1.1);
+        filter: saturate(1.12) contrast(1.08);
+      }
+
+      .gallery-tile:hover::after,
+      .gallery-tile:focus-visible::after {
+        opacity: 0.38;
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: grid;
+        place-items: center;
+        padding: clamp(16px, 3vw, 38px);
+        background:
+          radial-gradient(
+            circle at 18% 12%,
+            color-mix(in oklch, var(--cyan), transparent 76%),
+            transparent 34vw
+          ),
+          rgba(5, 0, 18, 0.9);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.24s ease,
+          visibility 0.24s ease;
+      }
+
+      .lightbox.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .lightbox::before {
+        content: "";
+        position: absolute;
+        width: min(74vw, 760px);
+        aspect-ratio: 1;
+        right: max(-320px, -18vw);
+        bottom: max(-330px, -22vw);
+        background: url("./sunce.svg") center / contain no-repeat;
+        opacity: 0.16;
+        pointer-events: none;
+        animation: sun-spin 34s linear infinite;
+      }
+
+      .lightbox-frame {
+        position: relative;
+        z-index: 1;
+        width: min(1140px, 92vw);
+        height: min(78vh, 780px);
+        display: grid;
+        place-items: center;
+        margin: 0;
+      }
+
+      .lightbox-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        object-fit: contain;
+        border: 1px solid color-mix(in oklch, var(--fg), transparent 68%);
+        background: color-mix(in oklch, var(--bg), black 12%);
+        box-shadow:
+          0 28px 80px rgba(0, 0, 0, 0.56),
+          0 0 40px color-mix(in oklch, var(--cyan), transparent 76%);
+        transition:
+          opacity 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .lightbox.is-loading .lightbox-image {
+        opacity: 0.34;
+        transform: scale(0.985);
+      }
+
+      .lightbox-button {
+        position: absolute;
+        z-index: 2;
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        color: var(--fg);
+        cursor: pointer;
+        border: 1px solid color-mix(in oklch, var(--fg), transparent 66%);
+        border-radius: 999px;
+        background: rgba(9, 0, 25, 0.7);
+        backdrop-filter: blur(14px);
+        transition:
+          background 0.2s ease,
+          border-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .lightbox-button:hover,
+      .lightbox-button:focus-visible {
+        color: var(--bg);
+        background: var(--fg);
+        border-color: var(--fg);
+        transform: scale(1.06);
+        outline: 0;
+      }
+
+      .lightbox-button svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .lightbox-close {
+        top: clamp(14px, 2.4vw, 30px);
+        right: clamp(14px, 2.4vw, 30px);
+      }
+
+      .lightbox-prev {
+        left: clamp(14px, 2.4vw, 34px);
+      }
+
+      .lightbox-next {
+        right: clamp(14px, 2.4vw, 34px);
+      }
+
+      body.lightbox-open {
+        overflow: hidden;
       }
 
       .sponsor-grid {
@@ -1044,15 +1587,135 @@
       .footer {
         padding: 34px var(--pad);
         border-top: 1px solid color-mix(in oklch, var(--fg), transparent 78%);
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 18px;
         color: var(--muted);
         font-family: var(--font-mono);
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.08em;
+      }
+
+      .footer-meta:nth-of-type(2) {
+        justify-self: center;
+      }
+
+      .footer-link {
+        justify-self: end;
+        color: var(--muted);
+        text-decoration-color: transparent;
+      }
+
+      .footer-link:hover {
+        color: var(--fg);
+        text-decoration-color: var(--cyan);
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .social-link {
+        width: 38px;
+        height: 38px;
+        display: inline-grid;
+        place-items: center;
+        color: var(--fg);
+        border: 1px solid color-mix(in oklch, var(--fg), transparent 68%);
+        border-radius: 999px;
+        background: color-mix(in oklch, var(--surface), transparent 30%);
+        text-decoration: none;
+      }
+
+      .social-link svg {
+        width: 19px;
+        height: 19px;
+        fill: currentColor;
+      }
+
+      .social-link:hover {
+        color: var(--bg);
+        background: var(--fg);
+        border-color: var(--fg);
+        transform: translateY(-3px);
+        box-shadow: 0 0 22px color-mix(in oklch, var(--cyan), transparent 56%);
+      }
+
+      @keyframes sun-spin {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+
+      @keyframes page-sun-glow {
+        0%,
+        100% {
+          opacity: 0.1;
+          scale: 0.96;
+        }
+        50% {
+          opacity: 0.17;
+          scale: 1.04;
+        }
+      }
+
+      @keyframes gallery-float {
+        0%,
+        100% {
+          translate: 0 0;
+        }
+        50% {
+          translate: 0 -6px;
+        }
+      }
+
+      @keyframes image-breathe {
+        0% {
+          transform: scale(1.04) translate3d(0, 0, 0);
+        }
+        100% {
+          transform: scale(1.1) translate3d(-1.2%, -1.2%, 0);
+        }
+      }
+
+      @keyframes image-dissolve-sheen {
+        0% {
+          opacity: 0;
+          transform: translate3d(-18%, 0, 0) scaleX(0.7);
+        }
+        28% {
+          opacity: 0.34;
+        }
+        72% {
+          opacity: 0.08;
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(18%, 0, 0) scaleX(1.15);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.001ms !important;
+        }
+
+        .gallery-tile img {
+          transition-duration: 0.85s, 0.85s, 0.85s !important;
+        }
+
+        .gallery-tile.is-dissolving::before {
+          animation-duration: 0.85s !important;
+        }
       }
 
       @media (max-width: 900px) {
@@ -1080,6 +1743,10 @@
         .location-grid,
         .tickets-band .section-inner {
           grid-template-columns: 1fr;
+        }
+        .gallery-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-auto-rows: clamp(150px, 24vw, 220px);
         }
         .signal-item {
           border-right: 0;
@@ -1114,6 +1781,15 @@
         }
         .sponsor:nth-child(3n) {
           border-right: 0;
+        }
+        .footer {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          text-align: center;
+        }
+        .footer-meta:nth-of-type(2),
+        .footer-link {
+          justify-self: center;
         }
         .artist span:first-child {
           font-size: clamp(26px, 5vw, 44px);
@@ -1181,6 +1857,10 @@
           font-size: clamp(30px, 5vw, 10px);
           line-height: 1;
         }
+        .gallery-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: clamp(140px, 34vw, 210px);
+        }
       }
 
       @media (max-width: 560px) {
@@ -1246,8 +1926,34 @@
         .map-card {
           min-height: 430px;
         }
-        .footer {
-          display: grid;
+        .gallery-section {
+          padding-block: 38px 62px;
+        }
+        .gallery-grid {
+          grid-auto-rows: 136px;
+          gap: 7px;
+          padding-block: 12px;
+        }
+        .lightbox {
+          padding: 12px;
+        }
+        .lightbox-frame {
+          width: 100%;
+          height: 74vh;
+        }
+        .lightbox-button {
+          width: 42px;
+          height: 42px;
+        }
+        .lightbox-prev {
+          left: 8px;
+        }
+        .lightbox-next {
+          right: 8px;
+        }
+        .social-link {
+          width: 36px;
+          height: 36px;
         }
       }
     </style>
@@ -1265,6 +1971,17 @@
     <!-- End Google Tag Manager (noscript) -->
     <div class="site-shell">
       <div class="grain" aria-hidden="true"></div>
+      <div class="page-sun page-sun--hero" aria-hidden="true"></div>
+      <div class="page-sun page-sun--hero-right" aria-hidden="true"></div>
+      <div class="page-sun page-sun--lineup-left" aria-hidden="true"></div>
+      <div class="page-sun page-sun--lineup" aria-hidden="true"></div>
+      <div class="page-sun page-sun--tickets" aria-hidden="true"></div>
+      <div class="page-sun page-sun--route" aria-hidden="true"></div>
+      <div class="page-sun page-sun--fortica-left" aria-hidden="true"></div>
+      <div class="page-sun page-sun--gallery-left" aria-hidden="true"></div>
+      <div class="page-sun page-sun--gallery-right" aria-hidden="true"></div>
+      <div class="page-sun page-sun--partners" aria-hidden="true"></div>
+      <div class="page-sun page-sun--footer" aria-hidden="true"></div>
 
       <header class="nav" role="banner">
         <a class="brand" href="#top" aria-label="From Herz With Love home">
@@ -1280,6 +1997,7 @@
           <a href="#lineup">Lineup</a>
           <a href="#tickets">Tickets</a>
           <a href="#fortica">Fortica</a>
+          <a href="#gallery">Gallery</a>
           <a href="#partners">Partners</a>
         </nav>
         <a
@@ -1540,6 +2258,190 @@
           </div>
         </section>
 
+        <section
+          class="section gallery-section"
+          id="gallery"
+          data-section="gallery"
+          aria-labelledby="gallery-title"
+        >
+          <div class="section-inner gallery-inner">
+            <div class="gallery-title">
+              <h2 id="gallery-title">Gallery</h2>
+            </div>
+
+            <div class="gallery-grid" data-gallery aria-label="Festival gallery">
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="0"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202510.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="1"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202511.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="2"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202512.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="3"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202513.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="4"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202514.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="5"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202515.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="6"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202516.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="7"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202517.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="8"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202518.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="9"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202519.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="10"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202520.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              <button
+                class="gallery-tile"
+                type="button"
+                data-gallery-tile
+                data-index="11"
+                aria-label="Open gallery image"
+              >
+                <img
+                  src="./gallery/previews/FHWL_Dan1_by_Lingographer_202521.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            </div>
+          </div>
+        </section>
+
         <section class="section" id="partners" data-section="partners">
           <div class="section-inner">
             <div class="section-title">
@@ -1610,10 +2512,107 @@
       </main>
 
       <footer class="footer">
-        <span>From Herz With Love 2026</span>
-        <span>July 17/18 • Fortica Mostar</span>
-        <span>Early bird</span>
+        <span class="footer-meta">From Herz With Love 2026</span>
+        <nav class="social-links" aria-label="Social media profiles">
+          <a
+            class="social-link"
+            href="https://www.facebook.com/fromherzwithlove"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Facebook"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M14.5 8.1V6.7c0-.7.5-.9.9-.9h2.3V2.1L14.5 2c-3.6 0-4.4 2.7-4.4 4.4v1.7H7.3v3.8h2.8V22h4.1V11.9h3.1l.5-3.8h-3.3Z"
+              />
+            </svg>
+          </a>
+          <a
+            class="social-link"
+            href="https://www.instagram.com/fromherzwithlove/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7.6 2h8.8C19.5 2 22 4.5 22 7.6v8.8c0 3.1-2.5 5.6-5.6 5.6H7.6C4.5 22 2 19.5 2 16.4V7.6C2 4.5 4.5 2 7.6 2Zm0 2.1c-1.9 0-3.5 1.6-3.5 3.5v8.8c0 1.9 1.6 3.5 3.5 3.5h8.8c1.9 0 3.5-1.6 3.5-3.5V7.6c0-1.9-1.6-3.5-3.5-3.5H7.6Zm4.4 3.3A4.6 4.6 0 1 1 7.4 12 4.6 4.6 0 0 1 12 7.4Zm0 2.1A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5Zm4.9-2.8a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1Z"
+              />
+            </svg>
+          </a>
+          <a
+            class="social-link"
+            href="https://soundcloud.com/fromherzwithlove"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="SoundCloud"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M4.4 16.7h-.7c-.9 0-1.7-.8-1.7-1.8s.8-1.8 1.7-1.8c.3 0 .5.1.7.2v3.4Zm2.1 0H5.3V10.5c.4-.2.8-.3 1.2-.4v6.6Zm2.1 0H7.4V9.9c.4.1.8.2 1.2.4v6.4Zm2.1 0H9.5V7.2c.4-.1.8-.2 1.2-.2v9.7Zm7.1 0h-6.2V7.4c.7-.3 1.4-.4 2.2-.4 2.7 0 5 2 5.4 4.6.3-.1.6-.2.9-.2 1.6 0 2.9 1.2 2.9 2.7s-1.3 2.6-2.9 2.6h-2.3Z"
+              />
+            </svg>
+          </a>
+        </nav>
+        <span class="footer-meta">July 17/18 - Fortica Mostar</span>
+        <a
+          class="footer-link"
+          href="https://www.entrio.ba/event/from-herz-with-love-5th-edition-29798"
+          target="_blank"
+          rel="noreferrer"
+          >Early bird</a
+        >
       </footer>
+
+      <div
+        class="lightbox"
+        data-lightbox
+        role="dialog"
+        aria-modal="true"
+        aria-hidden="true"
+        aria-label="Gallery image viewer"
+        tabindex="-1"
+      >
+        <button
+          class="lightbox-button lightbox-close"
+          type="button"
+          data-lightbox-close
+          aria-label="Close gallery"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+        <button
+          class="lightbox-button lightbox-prev"
+          type="button"
+          data-lightbox-prev
+          aria-label="Previous image"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+        <figure class="lightbox-frame">
+          <img
+            class="lightbox-image"
+            data-lightbox-image
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+            alt=""
+          />
+        </figure>
+        <button
+          class="lightbox-button lightbox-next"
+          type="button"
+          data-lightbox-next
+          aria-label="Next image"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </div>
     </div>
     <script>
       (() => {
@@ -1629,6 +2628,629 @@
           days === 1
             ? "day until the feeling comes home."
             : "days until the feeling comes home.";
+      })();
+
+      (() => {
+        const galleryFiles = [
+          "FHWL_Dan1_by_Lingographer_202510.jpg",
+          "FHWL_Dan1_by_Lingographer_202511.jpg",
+          "FHWL_Dan1_by_Lingographer_202512.jpg",
+          "FHWL_Dan1_by_Lingographer_202513.jpg",
+          "FHWL_Dan1_by_Lingographer_202514.jpg",
+          "FHWL_Dan1_by_Lingographer_202515.jpg",
+          "FHWL_Dan1_by_Lingographer_202516.jpg",
+          "FHWL_Dan1_by_Lingographer_202517.jpg",
+          "FHWL_Dan1_by_Lingographer_202518.jpg",
+          "FHWL_Dan1_by_Lingographer_202519.jpg",
+          "FHWL_Dan1_by_Lingographer_202520.jpg",
+          "FHWL_Dan1_by_Lingographer_202521.jpg",
+          "FHWL_Dan1_by_Lingographer_202522.jpg",
+          "FHWL_Dan1_by_Lingographer_202523.jpg",
+          "FHWL_Dan1_by_Lingographer_202524.jpg",
+          "FHWL_Dan1_by_Lingographer_202525.jpg",
+          "FHWL_Dan1_by_Lingographer_202526.jpg",
+          "FHWL_Dan1_by_Lingographer_202527.jpg",
+          "FHWL_Dan1_by_Lingographer_202528.jpg",
+          "FHWL_Dan1_by_Lingographer_202529.jpg",
+          "FHWL_Dan1_by_Lingographer_20253.jpg",
+          "FHWL_Dan1_by_Lingographer_202530.jpg",
+          "FHWL_Dan1_by_Lingographer_202532.jpg",
+          "FHWL_Dan1_by_Lingographer_202533.jpg",
+          "FHWL_Dan1_by_Lingographer_202534.jpg",
+          "FHWL_Dan1_by_Lingographer_202535.jpg",
+          "FHWL_Dan1_by_Lingographer_202536.jpg",
+          "FHWL_Dan1_by_Lingographer_202537.jpg",
+          "FHWL_Dan1_by_Lingographer_202538.jpg",
+          "FHWL_Dan1_by_Lingographer_202539.jpg",
+          "FHWL_Dan1_by_Lingographer_20254.jpg",
+          "FHWL_Dan1_by_Lingographer_202540.jpg",
+          "FHWL_Dan1_by_Lingographer_202541.jpg",
+          "FHWL_Dan1_by_Lingographer_202542.jpg",
+          "FHWL_Dan1_by_Lingographer_202543.jpg",
+          "FHWL_Dan1_by_Lingographer_202544.jpg",
+          "FHWL_Dan1_by_Lingographer_202545.jpg",
+          "FHWL_Dan1_by_Lingographer_202546.jpg",
+          "FHWL_Dan1_by_Lingographer_202547.jpg",
+          "FHWL_Dan1_by_Lingographer_202548.jpg",
+          "FHWL_Dan1_by_Lingographer_202549.jpg",
+          "FHWL_Dan1_by_Lingographer_20255.jpg",
+          "FHWL_Dan1_by_Lingographer_202550.jpg",
+          "FHWL_Dan1_by_Lingographer_202551.jpg",
+          "FHWL_Dan1_by_Lingographer_20256.jpg",
+          "FHWL_Dan1_by_Lingographer_20257.jpg",
+          "FHWL_Dan1_by_Lingographer_20258.jpg",
+          "FHWL_Dan1_by_Lingographer_20259.jpg",
+          "FHWL_Dan2_by_Lingographer_20251.jpg",
+          "FHWL_Dan2_by_Lingographer_202510.jpg",
+          "FHWL_Dan2_by_Lingographer_202511.jpg",
+          "FHWL_Dan2_by_Lingographer_202512.jpg",
+          "FHWL_Dan2_by_Lingographer_202513.jpg",
+          "FHWL_Dan2_by_Lingographer_202514.jpg",
+          "FHWL_Dan2_by_Lingographer_202515.jpg",
+          "FHWL_Dan2_by_Lingographer_202516.jpg",
+          "FHWL_Dan2_by_Lingographer_202517.jpg",
+          "FHWL_Dan2_by_Lingographer_202518.jpg",
+          "FHWL_Dan2_by_Lingographer_202519.jpg",
+          "FHWL_Dan2_by_Lingographer_20252.jpg",
+          "FHWL_Dan2_by_Lingographer_202520.jpg",
+          "FHWL_Dan2_by_Lingographer_202521.jpg",
+          "FHWL_Dan2_by_Lingographer_202522.jpg",
+          "FHWL_Dan2_by_Lingographer_202523.jpg",
+          "FHWL_Dan2_by_Lingographer_202524.jpg",
+          "FHWL_Dan2_by_Lingographer_202526.jpg",
+          "FHWL_Dan2_by_Lingographer_202527.jpg",
+          "FHWL_Dan2_by_Lingographer_202528.jpg",
+          "FHWL_Dan2_by_Lingographer_202529.jpg",
+          "FHWL_Dan2_by_Lingographer_20253.jpg",
+          "FHWL_Dan2_by_Lingographer_202530.jpg",
+          "FHWL_Dan2_by_Lingographer_20254.jpg",
+          "FHWL_Dan2_by_Lingographer_20255.jpg",
+          "FHWL_Dan2_by_Lingographer_202551.jpg",
+          "FHWL_Dan2_by_Lingographer_20256.jpg",
+          "FHWL_Dan2_by_Lingographer_20257.jpg",
+          "FHWL_Dan2_by_Lingographer_20258.jpg",
+          "FHWL_Dan2_by_Lingographer_20259.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_100.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_101.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_102.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_103.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_104.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_105.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_106.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_107.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_108.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_109.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_110.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_111.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_112.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_52.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_53.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_54.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_55.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_56.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_57.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_58.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_59.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_60.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_61.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_62.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_63.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_64.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_65.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_66.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_67.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_68.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_69.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_70.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_71.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_72.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_73.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_74.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_75.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_76.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_77.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_78.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_79.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_80.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_81.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_82.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_83.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_84.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_85.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_86.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_87.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_88.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_89.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_90.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_91.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_92.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_93.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_94.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_95.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_96.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_97.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_98.jpg",
+          "FHWL_Dan2_by_Lingographer_2025_99.jpg",
+        ];
+
+        const gallery = document.querySelector("[data-gallery]");
+        const tiles = [...document.querySelectorAll("[data-gallery-tile]")];
+        const lightbox = document.querySelector("[data-lightbox]");
+        const lightboxImage = document.querySelector("[data-lightbox-image]");
+        const closeButton = document.querySelector("[data-lightbox-close]");
+        const prevButton = document.querySelector("[data-lightbox-prev]");
+        const nextButton = document.querySelector("[data-lightbox-next]");
+
+        if (
+          !gallery ||
+          !tiles.length ||
+          !lightbox ||
+          !lightboxImage ||
+          !closeButton ||
+          !prevButton ||
+          !nextButton
+        ) {
+          return;
+        }
+
+        const imageBatch = (file) => {
+          if (file.includes("Dan1")) return "dan-1";
+          if (file.includes("Dan2") && file.includes("2025_")) {
+            return "dan-2-late";
+          }
+          if (file.includes("Dan2")) return "dan-2-early";
+          return file.replace(/\d+\.jpg$/i, "");
+        };
+
+        const images = galleryFiles.map((file) => ({
+          file,
+          batch: imageBatch(file),
+          preview: `./gallery/previews/${file}`,
+          full: `./gallery/${file}`,
+        }));
+
+        let activeIndex = 0;
+        let galleryEngaged = false;
+        let lightboxOpen = false;
+        let lastTrigger = null;
+        let shuffleTimer = 0;
+        let shuffleRhythm = Math.random();
+        let shuffleInProgress = false;
+        let lightboxRequest = 0;
+        let pointerStartX = 0;
+        let pointerStartY = 0;
+        let trackingPointer = false;
+        const recentTiles = [];
+        const emptyLightboxSrc = lightboxImage.getAttribute("src");
+        const reduceGalleryMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        const dissolveDuration = reduceGalleryMotion ? 950 : 1850;
+
+        const normalizeIndex = (index) =>
+          ((index % images.length) + images.length) % images.length;
+
+        const shuffledIndexes = (indexes = images.map((_, index) => index)) => {
+          for (let index = indexes.length - 1; index > 0; index -= 1) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            [indexes[index], indexes[swapIndex]] = [
+              indexes[swapIndex],
+              indexes[index],
+            ];
+          }
+          return indexes;
+        };
+
+        const gridColumns = () => {
+          const columns = getComputedStyle(gallery)
+            .gridTemplateColumns.split(" ")
+            .filter(Boolean).length;
+          return Math.max(1, columns || tiles.length);
+        };
+
+        const neighboringIndexes = (tile) => {
+          const tileIndex = tiles.indexOf(tile);
+          const columns = gridColumns();
+          const neighbors = [tileIndex - 1, tileIndex + 1];
+          const removeNeighbor = (index) => {
+            const neighborIndex = neighbors.indexOf(index);
+            if (neighborIndex >= 0) neighbors.splice(neighborIndex, 1);
+          };
+
+          if (tileIndex - columns >= 0) neighbors.push(tileIndex - columns);
+          if (tileIndex + columns < tiles.length) neighbors.push(tileIndex + columns);
+          if (tileIndex % columns === 0) {
+            removeNeighbor(tileIndex - 1);
+          }
+          if (tileIndex % columns === columns - 1) {
+            removeNeighbor(tileIndex + 1);
+          }
+
+          return neighbors.filter((index) => index >= 0 && index < tiles.length);
+        };
+
+        const batchesNearTile = (tile) =>
+          new Set(
+            neighboringIndexes(tile)
+              .map((index) => images[Number(tiles[index].dataset.index)]?.batch)
+              .filter(Boolean)
+          );
+
+        const diverseInitialIndexes = () => {
+          const columns = gridColumns();
+          const candidates = shuffledIndexes();
+          const selected = [];
+          const selectedBatches = [];
+
+          for (let slot = 0; slot < tiles.length; slot += 1) {
+            const leftBatch = slot % columns === 0 ? null : selectedBatches[slot - 1];
+            const topBatch =
+              slot - columns >= 0 ? selectedBatches[slot - columns] : null;
+
+            const choiceIndex = candidates.findIndex((index) => {
+              const batch = images[index].batch;
+              return batch !== leftBatch && batch !== topBatch;
+            });
+            const [picked] = candidates.splice(
+              choiceIndex >= 0 ? choiceIndex : 0,
+              1
+            );
+
+            selected.push(picked);
+            selectedBatches.push(images[picked].batch);
+          }
+
+          return selected;
+        };
+
+        const setTileImage = (
+          tile,
+          imageIndex,
+          animate = false,
+          onComplete = () => {}
+        ) => {
+          const index = normalizeIndex(imageIndex);
+          const image = images[index];
+          const currentImg =
+            tile.querySelector(".gallery-image-current") ||
+            tile.querySelector("img");
+          if (!currentImg) return false;
+
+          const commitStatic = () => {
+            tile.dataset.index = String(index);
+            tile.dataset.full = image.full;
+            currentImg.className = "gallery-image-current";
+            currentImg.src = image.preview;
+
+            tile
+              .querySelectorAll("img:not(.gallery-image-current)")
+              .forEach((img) => img.remove());
+            onComplete();
+            return true;
+          };
+
+          if (
+            animate &&
+            (tile.classList.contains("is-crossfading") ||
+              tile.classList.contains("is-dissolving"))
+          ) {
+            return false;
+          }
+
+          if (!animate) {
+            return commitStatic();
+          }
+
+          const nextImg = currentImg.cloneNode(false);
+          nextImg.className = "gallery-image-next";
+          nextImg.src = image.preview;
+          nextImg.alt = "";
+          nextImg.loading = "lazy";
+          nextImg.decoding = "async";
+          tile.append(nextImg);
+
+          const reveal = () => {
+            nextImg.getBoundingClientRect();
+            window.requestAnimationFrame(() => {
+              window.requestAnimationFrame(() => {
+                tile.classList.add("is-crossfading", "is-dissolving");
+
+                window.setTimeout(() => {
+                  tile.dataset.index = String(index);
+                  tile.dataset.full = image.full;
+                  currentImg.remove();
+                  nextImg.className = "gallery-image-current";
+                  tile
+                    .querySelectorAll("img:not(.gallery-image-current)")
+                    .forEach((img) => img.remove());
+                  tile.classList.remove("is-crossfading", "is-dissolving");
+                  onComplete();
+                }, dissolveDuration);
+              });
+            });
+          };
+
+          if (nextImg.decode) {
+            nextImg.decode().catch(() => {}).then(reveal);
+          } else {
+            nextImg.onload = reveal;
+            nextImg.onerror = reveal;
+          }
+
+          return true;
+        };
+
+        const visibleIndexes = () =>
+          new Set(
+            tiles
+              .map((tile) => Number(tile.dataset.index))
+              .filter((index) => Number.isInteger(index))
+          );
+
+        const nextUnusedIndex = (tile) => {
+          const visible = visibleIndexes();
+          const nearbyBatches = batchesNearTile(tile);
+          const currentBatch = images[Number(tile.dataset.index)]?.batch;
+          const candidates = shuffledIndexes().filter(
+            (index) => !visible.has(index)
+          );
+
+          const preferred = candidates.find((index) => {
+            const batch = images[index].batch;
+            return batch !== currentBatch && !nearbyBatches.has(batch);
+          });
+
+          if (Number.isInteger(preferred)) return preferred;
+
+          const fallback = candidates.find((index) => {
+            const batch = images[index].batch;
+            return !nearbyBatches.has(batch);
+          });
+
+          if (Number.isInteger(fallback)) return fallback;
+
+          for (let attempt = 0; attempt < images.length * 2; attempt += 1) {
+            const candidate = Math.floor(Math.random() * images.length);
+            if (!visible.has(candidate)) return candidate;
+          }
+          return Math.floor(Math.random() * images.length);
+        };
+
+        const shouldShuffle = () =>
+          !galleryEngaged &&
+          !gallery.matches(":hover") &&
+          !gallery.contains(document.activeElement) &&
+          !lightboxOpen &&
+          !document.hidden;
+
+        const randomBetween = (min, max) =>
+          min + Math.floor(Math.random() * (max - min + 1));
+
+        const nextShuffleDelay = (skipped = false) => {
+          if (skipped) return randomBetween(520, 860);
+
+          shuffleRhythm = shuffleRhythm * 0.62 + Math.random() * 0.38;
+          const delay = 760 + shuffleRhythm * 620 + randomBetween(-120, 160);
+          return Math.round(delay);
+        };
+
+        const nextTileForShuffle = () => {
+          const available = tiles.filter(
+            (tile) =>
+              !recentTiles.includes(tile) &&
+              !tile.classList.contains("is-crossfading") &&
+              !tile.classList.contains("is-dissolving")
+          );
+          const pool = available.length ? available : tiles;
+          return pool
+            .map((tile) => ({ tile, order: Math.random() }))
+            .sort((a, b) => a.order - b.order)
+            .map(({ tile }) => tile)
+            .find(
+              (tile) =>
+                !tile.classList.contains("is-crossfading") &&
+                !tile.classList.contains("is-dissolving")
+            );
+        };
+
+        const anyTileAnimating = () =>
+          tiles.some(
+            (tile) =>
+              tile.classList.contains("is-crossfading") ||
+              tile.classList.contains("is-dissolving")
+          );
+
+        const rememberTile = (tile) => {
+          recentTiles.push(tile);
+          while (recentTiles.length > 5) {
+            recentTiles.shift();
+          }
+        };
+
+        const shuffleOneTile = () => {
+          if (!shouldShuffle() || shuffleInProgress || anyTileAnimating()) {
+            return false;
+          }
+
+          const tile = nextTileForShuffle();
+          if (!tile) return false;
+
+          rememberTile(tile);
+          shuffleInProgress = true;
+          const started = setTileImage(tile, nextUnusedIndex(tile), true, () => {
+            shuffleInProgress = false;
+          });
+
+          if (!started) {
+            shuffleInProgress = false;
+          }
+
+          return started;
+        };
+
+        const scheduleShuffle = (delay = nextShuffleDelay()) => {
+          window.clearTimeout(shuffleTimer);
+          shuffleTimer = window.setTimeout(() => {
+            const changed = shuffleOneTile();
+            scheduleShuffle(
+              changed
+                ? dissolveDuration + nextShuffleDelay()
+                : nextShuffleDelay(true)
+            );
+          }, delay);
+        };
+
+        const preloadFull = (index) => {
+          const image = images[normalizeIndex(index)];
+          const loader = new Image();
+          loader.src = image.full;
+        };
+
+        const setLightboxImage = (index) => {
+          activeIndex = normalizeIndex(index);
+          const image = images[activeIndex];
+          const requestId = ++lightboxRequest;
+          lightbox.classList.add("is-loading");
+          lightboxImage.src = image.full;
+
+          const done = () => {
+            if (requestId === lightboxRequest) {
+              lightbox.classList.remove("is-loading");
+            }
+          };
+
+          if (lightboxImage.decode) {
+            lightboxImage.decode().catch(() => {}).then(done);
+          } else {
+            lightboxImage.onload = done;
+          }
+
+          preloadFull(activeIndex + 1);
+          preloadFull(activeIndex - 1);
+        };
+
+        const openLightbox = (index, trigger) => {
+          lastTrigger = trigger;
+          lightboxOpen = true;
+          document.body.classList.add("lightbox-open");
+          lightbox.classList.add("is-open");
+          lightbox.setAttribute("aria-hidden", "false");
+          setLightboxImage(index);
+          closeButton.focus({ preventScroll: true });
+        };
+
+        const closeLightbox = () => {
+          lightboxOpen = false;
+          document.body.classList.remove("lightbox-open");
+          lightbox.classList.remove("is-open", "is-loading");
+          lightbox.setAttribute("aria-hidden", "true");
+          lightboxImage.src = emptyLightboxSrc;
+
+          if (lastTrigger) {
+            lastTrigger.focus({ preventScroll: true });
+          }
+        };
+
+        const showSibling = (offset) => {
+          setLightboxImage(activeIndex + offset);
+        };
+
+        diverseInitialIndexes()
+          .forEach((index, tileIndex) => {
+            setTileImage(tiles[tileIndex], index);
+          });
+
+        tiles.forEach((tile) => {
+          tile.addEventListener("click", () => {
+            openLightbox(Number(tile.dataset.index) || 0, tile);
+          });
+        });
+
+        gallery.addEventListener("mouseenter", () => {
+          galleryEngaged = true;
+        });
+
+        gallery.addEventListener("mouseleave", () => {
+          galleryEngaged = false;
+        });
+
+        gallery.addEventListener("pointerenter", () => {
+          galleryEngaged = true;
+        });
+
+        gallery.addEventListener("pointerleave", () => {
+          galleryEngaged = false;
+        });
+
+        gallery.addEventListener("mouseover", () => {
+          galleryEngaged = true;
+        });
+
+        gallery.addEventListener("mousemove", () => {
+          galleryEngaged = true;
+        });
+
+        gallery.addEventListener("mouseout", (event) => {
+          if (!gallery.contains(event.relatedTarget)) {
+            galleryEngaged = false;
+          }
+        });
+
+        gallery.addEventListener("focusin", () => {
+          galleryEngaged = true;
+        });
+
+        gallery.addEventListener("focusout", (event) => {
+          if (!gallery.contains(event.relatedTarget)) {
+            galleryEngaged = false;
+          }
+        });
+
+        closeButton.addEventListener("click", closeLightbox);
+        prevButton.addEventListener("click", () => showSibling(-1));
+        nextButton.addEventListener("click", () => showSibling(1));
+
+        lightbox.addEventListener("click", (event) => {
+          if (event.target === lightbox || event.target.classList.contains("lightbox-frame")) {
+            closeLightbox();
+          }
+        });
+
+        lightbox.addEventListener("pointerdown", (event) => {
+          if (!lightboxOpen || event.target.closest("button")) return;
+          trackingPointer = true;
+          pointerStartX = event.clientX;
+          pointerStartY = event.clientY;
+        });
+
+        lightbox.addEventListener("pointerup", (event) => {
+          if (!trackingPointer) return;
+          trackingPointer = false;
+
+          const deltaX = event.clientX - pointerStartX;
+          const deltaY = event.clientY - pointerStartY;
+          if (Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
+            showSibling(deltaX < 0 ? 1 : -1);
+          }
+        });
+
+        lightbox.addEventListener("pointercancel", () => {
+          trackingPointer = false;
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (!lightboxOpen) return;
+
+          if (event.key === "Escape") {
+            closeLightbox();
+          } else if (event.key === "ArrowLeft") {
+            showSibling(-1);
+          } else if (event.key === "ArrowRight") {
+            showSibling(1);
+          }
+        });
+
+        scheduleShuffle();
       })();
     </script>
   </body>

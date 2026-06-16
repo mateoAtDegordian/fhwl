@@ -3076,6 +3076,16 @@
             tile.dataset.index = String(index);
             tile.dataset.full = image.full;
             currentImg.className = "gallery-image-current";
+            currentImg.dataset.retryCount = "0";
+            currentImg.onerror = () => {
+              const retryCount = Number(currentImg.dataset.retryCount || 0);
+              if (retryCount >= 2) return;
+
+              currentImg.dataset.retryCount = String(retryCount + 1);
+              window.setTimeout(() => {
+                currentImg.src = `${image.preview}?retry=${Date.now()}`;
+              }, 320 + retryCount * 420);
+            };
             currentImg.src = image.preview;
 
             tile
@@ -3099,13 +3109,15 @@
 
           const nextImg = currentImg.cloneNode(false);
           nextImg.className = "gallery-image-next";
-          nextImg.src = image.preview;
           nextImg.alt = "";
           nextImg.loading = "lazy";
           nextImg.decoding = "async";
+          nextImg.dataset.retryCount = "0";
           tile.append(nextImg);
 
           const reveal = () => {
+            nextImg.onload = null;
+            nextImg.onerror = null;
             nextImg.getBoundingClientRect();
             window.requestAnimationFrame(() => {
               window.requestAnimationFrame(() => {
@@ -3126,12 +3138,25 @@
             });
           };
 
-          if (nextImg.decode) {
-            nextImg.decode().catch(() => {}).then(reveal);
-          } else {
-            nextImg.onload = reveal;
-            nextImg.onerror = reveal;
-          }
+          const abortReveal = () => {
+            nextImg.remove();
+            onComplete();
+          };
+
+          nextImg.onload = reveal;
+          nextImg.onerror = () => {
+            const retryCount = Number(nextImg.dataset.retryCount || 0);
+            if (retryCount >= 2) {
+              abortReveal();
+              return;
+            }
+
+            nextImg.dataset.retryCount = String(retryCount + 1);
+            window.setTimeout(() => {
+              nextImg.src = `${image.preview}?retry=${Date.now()}`;
+            }, 320 + retryCount * 420);
+          };
+          nextImg.src = image.preview;
 
           return true;
         };

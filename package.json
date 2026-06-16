@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp index.html README.md favicon.ico sunce.svg *.webp *.mp4 *.png dist/ && cp -R gallery dist/gallery"
+    "build": "rm -rf dist && mkdir -p dist && cp index.html README.md favicon.ico robots.txt _headers sunce.svg *.webp *.mp4 *.png dist/ && cp -R gallery dist/gallery"
   },
   "devDependencies": {
     "wrangler": "^4.20.5"

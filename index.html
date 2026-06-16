@@ -1475,14 +1475,8 @@
         transition: opacity 0.2s ease;
       }
 
-      .gallery-tile:not(:hover):not(:focus-visible) .gallery-image-current {
+      .gallery-tile .gallery-image-current {
         animation: image-breathe 11s ease-in-out infinite alternate;
-      }
-
-      .gallery-grid:hover .gallery-tile img,
-      .gallery-grid:focus-within .gallery-tile img,
-      body.lightbox-open .gallery-tile img {
-        animation-play-state: paused;
       }
 
       .gallery-tile.is-crossfading .gallery-image-current {
@@ -2966,7 +2960,6 @@
         }));
 
         let activeIndex = 0;
-        let galleryEngaged = false;
         let lightboxOpen = false;
         let lastTrigger = null;
         let shuffleTimer = 0;
@@ -3197,21 +3190,16 @@
           return Math.floor(Math.random() * images.length);
         };
 
-        const shouldShuffle = () =>
-          !galleryEngaged &&
-          !gallery.matches(":hover") &&
-          !gallery.contains(document.activeElement) &&
-          !lightboxOpen &&
-          !document.hidden;
+        const shouldShuffle = () => !document.hidden;
 
         const randomBetween = (min, max) =>
           min + Math.floor(Math.random() * (max - min + 1));
 
         const nextShuffleDelay = (skipped = false) => {
-          if (skipped) return randomBetween(520, 860);
+          if (skipped) return randomBetween(260, 460);
 
           shuffleRhythm = shuffleRhythm * 0.62 + Math.random() * 0.38;
-          const delay = 760 + shuffleRhythm * 620 + randomBetween(-120, 160);
+          const delay = 380 + shuffleRhythm * 440 + randomBetween(-80, 110);
           return Math.round(delay);
         };
 
@@ -3345,46 +3333,6 @@
           tile.addEventListener("click", () => {
             openLightbox(Number(tile.dataset.index) || 0, tile);
           });
-        });
-
-        gallery.addEventListener("mouseenter", () => {
-          galleryEngaged = true;
-        });
-
-        gallery.addEventListener("mouseleave", () => {
-          galleryEngaged = false;
-        });
-
-        gallery.addEventListener("pointerenter", () => {
-          galleryEngaged = true;
-        });
-
-        gallery.addEventListener("pointerleave", () => {
-          galleryEngaged = false;
-        });
-
-        gallery.addEventListener("mouseover", () => {
-          galleryEngaged = true;
-        });
-
-        gallery.addEventListener("mousemove", () => {
-          galleryEngaged = true;
-        });
-
-        gallery.addEventListener("mouseout", (event) => {
-          if (!gallery.contains(event.relatedTarget)) {
-            galleryEngaged = false;
-          }
-        });
-
-        gallery.addEventListener("focusin", () => {
-          galleryEngaged = true;
-        });
-
-        gallery.addEventListener("focusout", (event) => {
-          if (!gallery.contains(event.relatedTarget)) {
-            galleryEngaged = false;
-          }
         });
 
         closeButton.addEventListener("click", closeLightbox);

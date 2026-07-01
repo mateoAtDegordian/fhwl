@@ -826,6 +826,34 @@
         line-height: 1;
       }
 
+      .phase-combo {
+        display: grid;
+        gap: 4px;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid color-mix(in oklch, var(--fg), transparent 72%);
+      }
+
+      .phase-combo em,
+      .combo-feature span {
+        font-style: normal;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .phase-combo strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: clamp(20px, 2.4vw, 30px);
+        line-height: 0.95;
+        text-transform: uppercase;
+        color: var(--fg);
+        text-shadow: 0 0 20px color-mix(in oklch, var(--gold), transparent 56%);
+      }
+
       .countdown {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -1149,6 +1177,33 @@
         color: color-mix(in oklch, var(--fg), transparent 10%);
         font-size: 15px;
         line-height: 1.35;
+      }
+
+      .combo-feature {
+        display: grid;
+        gap: 8px;
+        margin: 0 0 18px;
+        padding: 16px;
+        border: 1px solid color-mix(in oklch, var(--gold), white 10%);
+        background:
+          linear-gradient(135deg, color-mix(in oklch, var(--gold), transparent 78%), transparent 58%),
+          linear-gradient(105deg, color-mix(in oklch, var(--accent), transparent 76%), transparent);
+        box-shadow:
+          0 0 0 1px color-mix(in oklch, var(--fg), transparent 88%) inset,
+          0 0 26px color-mix(in oklch, var(--gold), transparent 74%);
+      }
+
+      .combo-feature strong {
+        display: block;
+        font-family: var(--font-display);
+        font-size: clamp(26px, 2.5vw, 40px);
+        line-height: 0.92;
+        text-transform: uppercase;
+      }
+
+      .combo-feature p {
+        margin: 0;
+        color: color-mix(in oklch, var(--fg), transparent 8%);
       }
 
       .promo-list {
@@ -2305,6 +2360,10 @@
                     >One day ticket 33 KM / festival ticket 60 KM until sold
                     out.</span
                   >
+                  <div class="phase-combo">
+                    <em>3+1 Presale combo</em>
+                    <strong>Buy 3 get 1 free</strong>
+                  </div>
                 </div>
               </div>
               <div
@@ -2375,13 +2434,17 @@
               </div>
               <p class="ticket-note">
                 Presale one day ticket is 33 KM. Presale festival ticket for
-                both nights is 60 KM. 3+1 Combo - Buy 3 get 1 free. Prices
-                increase at the event.
+                both nights is 60 KM. Prices increase at the event.
               </p>
+              <div class="combo-feature" aria-label="Presale combo promotion">
+                <span>Presale combo</span>
+                <strong>3+1 Combo</strong>
+                <p>Buy 3 tickets and get 1 free until sold out.</p>
+              </div>
               <ul class="promo-list" aria-label="Ticket promotions">
                 <li><span>Presale one day</span><strong>33 KM</strong></li>
                 <li><span>Presale festival</span><strong>60 KM</strong></li>
-                <li><span>3+1 Combo</span><strong>Buy 3 get 1 free</strong></li>
+                <li><span>Presale combo</span><strong>3+1 free</strong></li>
               </ul>
               <a
                 class="ticket-button"
